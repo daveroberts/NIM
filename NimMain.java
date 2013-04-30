@@ -1,84 +1,76 @@
 /**
  * <p>Title: Nim Game</p>
- * <p>Date: January 20th, 2002</p>
+ * <p>Date: April 30th, 2013</p>
  *
  * @author David Roberts
- * @version 0.3
+ * @version 0.4
  */
+
+import java.io.*;
+
 public class NimMain
 {
-  public static void main(String[] args)
+  public static void main(String[] args) throws IOException
   {
-    boolean winner = false;
-    String playerA;
-    String playerB;
-    int rowPick;  //  Row number picked
-    int pegsInRow;  //  Actual Number of pegs in row
-    int pegPick;  // Users pick of number of pegs
-    SimpleInput g = new SimpleInput();
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     Game nim = new Game();
     System.out.println("Welcome to the game of Nim");
     System.out.println("Enter the name of player 1");
-    playerA = g.nextWord();
+    nim.setPlayer1(br.readLine());
     System.out.println("Enter the name of player 2");
-    playerB = g.nextWord();
-    while (winner == false)
+    nim.setPlayer2(br.readLine());
+    while (!nim.isFinished())
     {
-      if (nim.myTurn() == true)
-      {
-        System.out.println(playerA + ", it is your turn");
-      }
-      else
-      {
-        System.out.println(playerB + ", it is your turn");
-      }
-
+      System.out.println(nim.currentPlayer() + ", it is your turn");
       //  Selects a valid row
       nim.displayPegs();
-      System.out.println("Which row do you want to pick from");
-      rowPick = g.nextInt();
-      while (!nim.selectRow(rowPick))
+      boolean validRow = false;
+      int row = 0;
+      while (!validRow)
       {
-          System.out.println("Incorrect value, try again");
-          nim.displayPegs();
-          System.out.println("Which row do you want to pick from");
-          rowPick = g.nextInt();
+        System.out.print("Which row do you want to pick from? ");
+        row = getInt(br);
+        if (!nim.validRow(row)){
+          System.err.println("This is not a valid row");
+        } else
+          validRow = true;
       }
-
       //  Pick the number of Pegs to remove
       nim.displayPegs();
-      System.out.println("How many pegs do you want to take from this row?");
-      pegPick = g.nextInt();
-      pegsInRow = nim.getRowX(rowPick);
-      while (!nim.selectPegs(rowPick, pegPick))
-      {
-        System.out.println("Incorrect value, try again");
-        nim.displayPegs();
+      boolean validPegs = false;
+      int pegs = 0;
+      while (!validPegs) {
         System.out.println("How many pegs do you want to take from this row?");
-        pegPick = g.nextInt();
+        pegs = getInt(br);
+        validPegs = nim.selectPegs(row, pegs);
+        if (!validPegs) {
+          System.err.println("Incorrect value, try again");
+          nim.displayPegs();
+        }
       }
 
       //  Removes the pegs
-      nim.removePegs(rowPick,pegPick);
+      nim.removePegs(row,pegs);
 
       //  Check for winning
-      winner = nim.checkWinning();
-      if (winner == true)
-      {
-        if (nim.myTurn() == true)
-        {
-          System.out.println("A winner is you " + playerA + "!");
-        }
-        else
-        {
-          System.out.println("A winner is you " + playerB + "!");
-        }
+      if (nim.isFinished()){
+        System.out.println("A winner is you " + nim.currentPlayer());
+        System.exit(0);
       }
-      else
-      {
-        nim.switchTurn();
-        System.out.println(); //  Add spaces
-        System.out.println(); //  Add spaces
+      nim.switchTurn();
+      System.out.println(); //  Add spaces
+      System.out.println(); //  Add spaces
+    }
+  }
+  public static int getInt(BufferedReader br) throws IOException {
+    while (true)
+    {
+      String strInt = br.readLine();
+      try {
+        int value = Integer.parseInt(strInt);
+        return value;
+      } catch (NumberFormatException nfe){
+        System.err.println("You must enter a number");
       }
     }
   }

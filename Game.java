@@ -4,6 +4,8 @@ public class Game{
 private int row1;
 private int row2;
 private int row3;
+private String player1;
+private String player2;
 private boolean firstPlayersTurn = false; //  whose turn is it
 
   //  main constructor
@@ -13,6 +15,14 @@ private boolean firstPlayersTurn = false; //  whose turn is it
     row2 = 7;
     row3 = 9;
     firstPlayersTurn = true;
+  }
+
+  public void setPlayer1(String p1){
+    player1 = p1;
+  }
+
+  public void setPlayer2(String p2){
+    player2 = p2;
   }
 
   //  returns a value for pegs in any row
@@ -28,7 +38,7 @@ private boolean firstPlayersTurn = false; //  whose turn is it
   }
 
   //  Selects the row to remove pegs from
-  public boolean selectRow(int rowPick)
+  public boolean validRow(int rowPick)
   {
     if (rowPick > 0 && rowPick < 4)
     {
@@ -62,14 +72,9 @@ private boolean firstPlayersTurn = false; //  whose turn is it
   }
 
   //  Check for winning
-  public boolean checkWinning()
+  public boolean isFinished()
   {
-    if (row1 == 0 && row2 == 0 && row3 == 0)
-    {
-      return true;
-    }
-    else
-      return false;
+    return (row1 == 0 && row2 == 0 && row3 == 0);
   }
 
   public boolean myTurn()
@@ -85,7 +90,10 @@ private boolean firstPlayersTurn = false; //  whose turn is it
     else
       firstPlayersTurn = true;
   }
-
+  public String currentPlayer(){
+    if (firstPlayersTurn){ return player1; }
+    else { return player2; }
+  }
   public void displayPegs()
   {
     System.out.print("Row 1 - ");
