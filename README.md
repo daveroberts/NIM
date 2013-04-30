@@ -3,4 +3,4 @@ NIM
 
 Back in 2002, one of the first JAVA programs I made, NIM
 
-![NIM Game](http://github.com/daveroberts/NIM/raw/NIM.png)
+![NIM Game](https://raw.github.com/daveroberts/NIM/master/NIM.png)
